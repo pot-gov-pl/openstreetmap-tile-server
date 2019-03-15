@@ -4,7 +4,7 @@ FROM ubuntu:18.04
 # https://switch2osm.org/manually-building-a-tile-server-18-04-lts/
 
 # Set up environment
-ENV TZ=UTC
+ENV TZ=Europe/Warsaw
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Install dependencies

@@ -1,41 +1,57 @@
 # openstreetmap-tile-server
 
-This container allows you to easily set up an OpenStreetMap PNG tile server given a `.osm.pbf` file. It is based on the [latest Ubuntu 18.04 LTS guide](https://switch2osm.org/manually-building-a-tile-server-18-04-lts/) from [switch2osm.org](https://switch2osm.org/) and therefore uses the default OpenStreetMap style.
+Kontener pozwalający na łatwe i szybkie uruchomienie serwera kafelków OpenStreetMap w domyślnym stylu graficznym na podstawie dostarczonego pojedynczego pliku `.osm.pbf`.
 
-## Setting up the server
+## Budowa kontenera
 
-First create a Docker volume to hold the PostgreSQL database that will contain the OpenStreetMap data:
+Kontener ten powstał jako specjalna wersja kontenera overv/openstreetmap-tile-server i na chwilę obecną nie jest dostępny poprzez Docker Hub. Stąd należy go zbudować, aby z niego korzystać.
+
+    git clone https://github.com/pot-gov-pl/openstreetmap-tile-server
+    cd openstreetmap-tile-server
+    sudo docker build --tag=openstreetmap-tile-server .
+
+## Import danych
+
+Utwórz wolumin dockerowy do przechowywania danych OpenStreetMap w bazie PosgtreSQL.
 
     docker volume create openstreetmap-data
 
-Next, download an .osm.pbf extract from geofabrik.de for the region that you're interested in. You can then start importing it into PostgreSQL by running a container and mounting the file as `/data.osm.pbf`. For example:
+Pobierz plik `.osm.pbf` z [geofabrik.de](https://www.geofabrik.de/) dla interesującego Cię regionu. Przykładowo, najświeższe dane o Polsce:
 
-    docker run -v /absolute/path/to/luxembourg.osm.pbf:/data.osm.pbf -v openstreetmap-data:/var/lib/postgresql/10/main overv/openstreetmap-tile-server import
+    wget http://download.geofabrik.de/europe/poland-latest.osm.pbf
 
-If the container exits without errors, then your data has been successfully imported and you are now ready to run the tile server.
+Teraz zaimportuj je do PostgreSQL uruchamiając kontener z parametrem `import` z podmontowanym pobranym plikiem jako `/data.osm.pbf`.
 
-## Running the server
+    docker run -v /absolute/path/to/poland-latest.osm.pbf:/data.osm.pbf -v openstreetmap-data:/var/lib/postgresql/10/main openstreetmap-tile-server import
 
-Run the server like this:
+Jeżeli kontener zakończy pracę bez błędów, będzie to oznaczać, że Twoje dane zostały poprawnie zaimportowane i wszystko jest gotowe, aby uruchomić serwer.
 
-    docker run -p 80:80 -v openstreetmap-data:/var/lib/postgresql/10/main -d overv/openstreetmap-tile-server run
+## Uruchomienie serwera
 
-Your tiles will now be available at http://localhost:80/tile/{z}/{x}/{y}.png. If you open `leaflet-demo.html` in your browser, you should be able to see the tiles served by your own machine. Note that it will initially quite a bit of time to render the larger tiles for the first time.
+Uruchom serwer następującym wywołaniem z parametrem `run` oraz przypisaniem go do portu 80:
 
-## Preserving rendered tiles
+    docker run -p 80:80 -v openstreetmap-data:/var/lib/postgresql/10/main -d openstreetmap-tile-server run
 
-Tiles that have already been rendered will be stored in `/var/lib/mod_tile`. To make sure that this data survives container restarts, you should create another volume for it:
+Kafelki będą dostępne pod adresem http://localhost:80/tile/{z}/{x}/{y}.png a pod adresem http://localhost:80/leaflet-demo.html powinna być dostępna prosta demonstracyjna aplikacja internetowa. Przy pierwszym uruchomieniu pojawienie się pierwszych kafelków może zająć chwilę, bo muszą zostać przygotowane.
+
+
+## Zachowanie wyrenderowanych kafelków
+
+Aby pracowicie wytworzone kafelki przetrwały restart kontenera, najpierw utwórz dla nich wolumin:
 
     docker volume create openstreetmap-rendered-tiles
-    docker run -p 80:80 -v openstreetmap-data:/var/lib/postgresql/10/main -v openstreetmap-rendered-tiles:/var/lib/mod_tile -d overv/openstreetmap-tile-server run
 
-## Performance tuning
+Następnie uruchamiaj serwer z dodatkowym parametrem wskazującym na ten wolumin;
 
-The import and tile serving processes use 4 threads by default, but this number can be changed by setting the `THREADS` environment variable. For example:
+    docker run -p 80:80 -v openstreetmap-data:/var/lib/postgresql/10/main -v openstreetmap-rendered-tiles:/var/lib/mod_tile -d openstreetmap-tile-server run
 
-    docker run -p 80:80 -e THREADS=24 -v openstreetmap-data:/var/lib/postgresql/10/main -d overv/openstreetmap-tile-server run
+## Optymalizacja wydajności
 
-## License
+Domyślnie proces importowy oraz serwer korzystają z 4 wątków, ale wartość tę można zmienić ustawiając zmienną środowiskową `THREADS`, np. tak:
+
+    docker run -p 80:80 -e THREADS=24 -v openstreetmap-data:/var/lib/postgresql/10/main -d openstreetmap-tile-server run
+
+## Licencja
 
 ```
 Copyright 2018 Alexander Overvoorde

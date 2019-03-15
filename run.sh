@@ -22,8 +22,8 @@ if [ "$1" = "import" ]; then
 
     # Download Luxembourg as sample if no data is provided
     if [ ! -f /data.osm.pbf ]; then
-        echo "WARNING: No import file at /data.osm.pbf, so importing Luxembourg as example..."
-        wget -nv http://download.geofabrik.de/europe/luxembourg-latest.osm.pbf -O /data.osm.pbf
+        echo "WARNING: No import file at /data.osm.pbf, so importing Poland"
+        wget -nv http://download.geofabrik.de/europe/poland-latest.osm.pbf -O /data.osm.pbf
     fi
 
     # Import data
