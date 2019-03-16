@@ -17,7 +17,6 @@ RUN echo "deb [ allow-insecure=yes ] http://apt.postgresql.org/pub/repos/apt/ bi
   build-essential \
   bzip2 \
   cmake \
-  fonts-noto-cjk \
   fonts-noto-hinted \
   fonts-noto-unhinted \
   clang \
