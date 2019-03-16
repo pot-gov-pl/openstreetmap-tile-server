@@ -2,9 +2,15 @@
 
 Kontener pozwalający na łatwe i szybkie uruchomienie serwera kafelków OpenStreetMap w domyślnym stylu graficznym na podstawie dostarczonego pojedynczego pliku `.osm.pbf`.
 
+**Uwaga!**
+
+Zwróć uwagę, że to repozytorium ma dwie główne gałęzie:
+* `master` - uniwersalny kontener do obsługi dowolnych map;
+* `poland` - kontener modyfikowany pod kątem serwowania mapy Polski z terenu Polski, czyli np. ustawiona jest odpowiednia stefa czasowa i nie ma chińskich czcionek.
+
 ## Budowa kontenera
 
-Kontener ten powstał jako specjalna wersja kontenera overv/openstreetmap-tile-server i na chwilę obecną nie jest dostępny poprzez Docker Hub. Stąd należy go zbudować, aby z niego korzystać.
+Kontener ten powstał jako specjalna wersja uniwersalnego kontenera overv/openstreetmap-tile-server i na chwilę obecną nie jest dostępny poprzez Docker Hub. Stąd należy go zbudować, aby z niego korzystać.
 
     git clone https://github.com/pot-gov-pl/openstreetmap-tile-server
     cd openstreetmap-tile-server
