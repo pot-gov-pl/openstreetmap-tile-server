@@ -49,10 +49,10 @@ RUN echo "deb [ allow-insecure=yes ] http://apt.postgresql.org/pub/repos/apt/ bi
   nodejs \
   npm \
   postgis \
-  postgresql-10 \
-  postgresql-10-postgis-2.5 \
-  postgresql-10-postgis-2.5-scripts \
-  postgresql-contrib-10 \
+  postgresql-11 \
+  postgresql-11-postgis-2.5 \
+  postgresql-11-postgis-2.5-scripts \
+  postgresql-contrib-11 \
   protobuf-c-compiler \
   python-mapnik \
   sudo \
@@ -135,10 +135,10 @@ RUN ln -sf /proc/1/fd/1 /var/log/apache2/access.log \
   && ln -sf /proc/1/fd/2 /var/log/apache2/error.log
 
 # Configure PosgtreSQL
-COPY postgresql.custom.conf /etc/postgresql/10/main/
+COPY postgresql.custom.conf /etc/postgresql/11/main/
 RUN chown -R postgres:postgres /var/lib/postgresql \
-  && chown postgres:postgres /etc/postgresql/10/main/postgresql.custom.conf \
-  && echo "\ninclude 'postgresql.custom.conf'" >> /etc/postgresql/10/main/postgresql.conf
+  && chown postgres:postgres /etc/postgresql/11/main/postgresql.custom.conf \
+  && echo "\ninclude 'postgresql.custom.conf'" >> /etc/postgresql/11/main/postgresql.conf
 
 # Start running
 COPY run.sh /

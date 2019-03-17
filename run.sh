@@ -12,7 +12,7 @@ fi
 
 if [ "$1" = "import" ]; then
     # Initialize PostgreSQL
-    sudo -u postgres echo "autovacuum = off" >> /etc/postgresql/10/main/postgresql.custom.conf
+    sudo -u postgres echo "autovacuum = off" >> /etc/postgresql/11/main/postgresql.custom.conf
     service postgresql start
     sudo -u postgres createuser renderer
     sudo -u postgres createdb -E UTF8 -O renderer gis
