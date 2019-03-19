@@ -40,7 +40,9 @@ Uruchom serwer następującym wywołaniem z parametrem `run` oraz przypisaniem g
 
     docker run -p 80:80 -v openstreetmap-data:/var/lib/postgresql/10/main -d openstreetmap-tile-server run
 
-Kafelki będą dostępne pod adresem http://localhost:80/tile/{z}/{x}/{y}.png a pod adresem http://localhost:80/leaflet-demo.html powinna być dostępna prosta demonstracyjna aplikacja internetowa. Przy pierwszym uruchomieniu pojawienie się pierwszych kafelków może zająć chwilę, bo muszą zostać przygotowane.
+Kafelki będą dostępne pod adresem http://localhost:80/tile/{z}/{x}/{y}.png (gdzie z,x,y to liczby wskazujące zoom i współrzędne) a pod adresem http://localhost:80/ będzie dostępna prosta demonstracyjna aplikacja internetowa wyświetlająca mapę na pełnym ekranie.
+
+Przy pierwszym uruchomieniu pojawienie się pierwszych kafelków może zająć chwilę, bo muszą zostać przygotowane.
 
 
 ## Zachowanie wyrenderowanych kafelków
