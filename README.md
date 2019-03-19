@@ -8,6 +8,8 @@ Zwróć uwagę, że to repozytorium ma dwie główne gałęzie:
 * `master` - uniwersalny kontener do obsługi dowolnych map;
 * `poland` - kontener modyfikowany pod kątem serwowania mapy Polski z terenu Polski, czyli np. ustawiona jest odpowiednia stefa czasowa i nie ma chińskich czcionek.
 
+Oprócz tego mogą tymczasowo być tworzne gałęzie eksperymentalne np. oferujące wyższe wersje oprogramowania bazodanowego, alternatywne mechanizmy importujące lub inne zmiany.
+
 ## Budowa kontenera
 
 Kontener ten powstał jako specjalna wersja uniwersalnego kontenera overv/openstreetmap-tile-server i na chwilę obecną nie jest dostępny poprzez Docker Hub. Stąd należy go zbudować, aby z niego korzystać.
@@ -56,6 +58,21 @@ Następnie uruchamiaj serwer z dodatkowym parametrem wskazującym na ten wolumin
 Domyślnie proces importowy oraz serwer korzystają z 4 wątków, ale wartość tę można zmienić ustawiając zmienną środowiskową `THREADS`, np. tak:
 
     docker run -p 80:80 -e THREADS=24 -v openstreetmap-data:/var/lib/postgresql/10/main -d openstreetmap-tile-server run
+
+## Rozwiązywanie problemów
+
+### ERROR: could not resize shared memory segment
+
+Jeżeli trafisz na takie coś w logu, to znaczy to, że  domyślny dockerowy limit pamiędzi współdzielonej (równy 64 MB) jest zbyt niski i trzeba go zwiększyć:
+
+    renderd[126]: ERROR: failed to render TILE ajt 6 32-39 16-23,
+    renderd[126]: reason: Postgis Plugin: ERROR: could not resize shared memory segment
+
+Nową wartość należy ustawć parametrem `--shm-size`. Przykład:
+
+    docker run -p 80:80 -v openstreetmap-data:/var/lib/postgresql/10/main --shm-size="192m" -d openstreetmap-tile-server run
+
+Zbyt wysokie wartości mogą sprawić, że znacząco wzrośnie użycie CPU oraz pamięci. Możliwe, że trzeba będzie eksperymentalnie określić odpowiednią wartość limitu.
 
 ## Licencja
 
